@@ -1,0 +1,10 @@
+Setup commands:
+
+conda create --name KittiSeg python=2.7
+source activate KittiSeg
+pip install -r requirements.txt
+TensorFlow CPU: pip install --ignore-installed --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-1.0.0-cp27-none-linux_x86_64.whl
+TensorFlow GPU: pip install --ignore-installed --upgrade https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.0.0-cp27-none-linux_x86_64.whl
+git submodule update --init --recursive
+python prepare_road_data.py
+python train.py --hypes hypes/KittiSeg_VGG.json

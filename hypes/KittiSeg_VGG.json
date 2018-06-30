@@ -6,16 +6,15 @@
     "optimizer_file" : "../optimizer/generic_optimizer.py",
     "evaluator_file" : "../evals/kitti_eval.py"
   },
-  
   "path": ["../incl"],
 
   "data": {
-    "train_file" : "data_road/train3.txt",
-    "val_file" : "data_road/val3.txt",
-    "road_color" : [255,0,255],
-    "background_color" : [255,0,0],
+    "train_file" : "training/train.txt",
+    "val_file" : "training/val.txt",
+    "road_color" : [255,255,255],
+    "background_color" : [0,0,0],
     "vgg_url": "https://dl.dropboxusercontent.com/u/50333326/vgg16.npy",
-    "kitti_url": ""
+    "kitti_url": "https://s3.eu-central-1.amazonaws.com/avg-kitti/data_road.zip"
   },
  
   "arch": {
@@ -41,8 +40,8 @@
     "crop_chance": 0.8,
     "fix_shape": false,
     "reseize_image": true,
-    "image_height" : 384,
-    "image_width" : 1248,
+    "image_height" : 400,
+    "image_width" : 400,
 
     "augment_level": 1
   },
