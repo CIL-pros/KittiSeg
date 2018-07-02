@@ -6,5 +6,20 @@ pip install -r requirements.txt
 TensorFlow CPU: pip install --ignore-installed --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-1.0.0-cp27-none-linux_x86_64.whl
 TensorFlow GPU: pip install --ignore-installed --upgrade https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.0.0-cp27-none-linux_x86_64.whl
 git submodule update --init --recursive
+cd submodules/TensorVision
+python setup.py install
+cd ../..
 python prepare_road_data.py
+
+=================================================
+
+Training:
+
 python train.py --hypes hypes/KittiSeg_VGG.json
+
+=================================================
+
+Testing on Kaggle:
+
+tv-analyze --hypes hypes/KittiSeg_VGG_test.json --logdir RUNS/<CHECKPOINT_MODEL_NAME>
+python mask_to_submission.py --image-directory RUNS/<CHECKPOINT_MODEL_NAME>/analyse/images

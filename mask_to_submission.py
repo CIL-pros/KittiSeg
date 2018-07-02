@@ -2,6 +2,7 @@
 
 import os
 import numpy as np
+from scipy.misc import imsave, imresize
 import matplotlib.image as mpimg
 import re
 from optparse import OptionParser
@@ -22,9 +23,12 @@ def patch_to_label(patch):
 
 def mask_to_submission_strings(image_filename):
     """Reads a single image and outputs the strings that should go into the submission file"""
-    img_number = int(re.search(r"\d+", image_filename).group(0))
+    base_name = os.path.basename(image_filename)
+    img_number = int(re.search(r"\d+", base_name).group(0))
     # test_img_number = int(re.search(r"\d+", test_set_order[img_number]).group(0))
     im = mpimg.imread(image_filename)
+    im = imresize(im, (608, 608))
+    # imsave(image_filename[:-4] + '_resized.png', im)
     im[im > 0] = 1  # make sure labels are set to 1
     patch_size = 16
     for j in range(0, im.shape[1], patch_size):
@@ -46,9 +50,9 @@ def create_parser():
     parser = OptionParser()
     parser.add_option('-d', '--image-directory',
                       dest='directory_in_str',
-                      default='predictions_testing',
+                      default='../KittiSeg/RUNS/KittiSeg_VGG_2018_06_30_16.20/analyse/images',
                       help='Path to folder with segmentation results. It is assumed that'
-                           'prediction files will contain word \"prediction\".')
+                           'prediction files will contain word \"label\".')
     parser.add_option('-o', '--output-file',
                       dest='output_file',
                       default='submission.csv',
@@ -59,10 +63,11 @@ def create_parser():
 if __name__ == '__main__':
     # Load command input options
     options, remainder = create_parser().parse_args()
-    directory = os.fsencode(options.directory_in_str)
+    if not os.path.exists(options.directory_in_str):
+        raise ValueError('Image directory doesn\'t exist. Provide valid path to masks '
+                         'using command agrument \'-d\' or \'--image-directory\'.')
     image_filenames = []
-    for file in sorted(os.listdir(directory)):
-        filename = os.fsdecode(file)
+    for filename in sorted(os.listdir(options.directory_in_str)):
         print(filename)
         if 'label' in filename:
             image_filenames.append('{}/{}'.format(options.directory_in_str, filename))

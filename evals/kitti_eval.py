@@ -113,15 +113,23 @@ def evaluate(hypes, sess, image_pl, inf_out):
 
                     if phase == 'val':
                         # Saving RB Plot
-                        ov_image = seg.make_overlay(image, output_im)
-                        name = os.path.basename(image_file)
-                        image_list.append((name, ov_image))
-
-                        name2 = name.split('.')[0] + '_green.png'
-
+                        name = os.path.basename(image_file).split('.')[0]
                         hard = output_im > 0.5
+
+                        thresholded = output_im
+                        thresholded[hard] = 1
+                        thresholded[np.logical_not(hard)] = 0
+
+                        name1 = name + '_label.png'
+                        image_list.append((name1, thresholded))
+
+                        name2 = name + '_overlay.png'
+                        ov_image = seg.make_overlay(image, output_im)
+                        image_list.append((name2, ov_image))
+
+                        name3 = name + '_green.png'
                         green_image = utils.fast_overlay(image, hard)
-                        image_list.append((name2, green_image))
+                        image_list.append((name3, green_image))
 
                     FN, FP, posNum, negNum = eval_image(hypes,
                                                         gt_image, output_im)
